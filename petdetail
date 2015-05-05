@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame 
+       Remove this if you use the .htaccess -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Pets Details</title>
+  <meta name="description" content="">
+  <meta name="author" content="Daniel G. Miranda">
+
+  <meta name="viewport" content="width=device-width; initial-scale=1.0">
+
+  <!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/styles.css" type="text/css" />
+</head>
+
+<body>
+  <div>
+    <header>
+      <h1>Pets Details</h1>
+    </header>
+
+    <div>
+      
+    </div>
+        <div> <br> <br>
+      <div>
+          <h3>Pet Details</h3>
+          <br> <br>
+          <br>
+          <?php
+          
+    	require '../dbConnection.php';
+   
+    	$dbConn = getConnection();
+   
+   
+    global $petz;
+    if(isset($_GET["petID"])){
+    	 $id = $_GET["petID"];
+		
+        $query = "SELECT petID, name, petNumber FROM z_pets WHERE petID = $id";	//=$id	<---before the (") and after petID
+        $stmt = $dbConn -> prepare($query);
+        $stmt -> execute();
+        $petz= $stmt->fetch();
+		
+   	if(isset($petz)) {
+        //print_r($petz);
+	   
+            //if($petz['species']){
+                $result = "SELECT petID, name, age, breed, gender, dateFound, petNumber
+                           FROM z_pets
+                           WHERE petID = $id";
+                       
+                $stmt = $dbConn -> prepare($result);
+                $stmt -> execute();
+                $record= $stmt->fetchAll();
+           
+                if (isset($record)) {
+                    foreach($record as $petInfo) {
+       
+                    echo "<table class='tableStyles'>";
+                    echo "<td class='titles'> PetID </td>
+                    	<td class='titles'> Name </td>
+                    	<td class='titles'> Age </td>
+                    	<td class='titles'> Breed </td>
+                    	<td class='titles'> Gender </td>
+                    	<td class='titles'> Date Found </td>
+                    	<td class='titles'> Pet Number </td>";
+                    echo "<tr>";
+                    echo "<td class='centerInfo'>".$petInfo['petID']."</td>
+                    <td class='centerInfo'>".$petInfo['name']."</td>
+                    <td class='centerInfo'>".$petInfo['age']."</td>
+                    <td class='centerInfo'>".$petInfo['breed']."</td>
+                    <td class='centerInfo'>".$petInfo['gender']."</td>
+                    <td class='centerInfo'>".$petInfo['dateFound']."</td>
+                    <td class='centerInfo'>".$petInfo['petNumber']."</td>";
+                    echo "<tr>";
+                    echo "</table>";
+                    }
+                }
+            }
+    }
+?>
+</div>
+</div>
+
+    <footer>
+     <p>&copy; Copyright  by Daniel G. Miranda</p>
+    </footer>
+  </div>
+</body>
+</html>
